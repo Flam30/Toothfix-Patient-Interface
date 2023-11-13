@@ -1,5 +1,35 @@
-import React from 'react'
+'use client';
+
+import React, { useRef, useEffect } from 'react'
 import Image from 'next/image'
+import { Wrapper, Status } from "@googlemaps/react-wrapper";
+
+function MapComponent({
+  center,
+  zoom,
+}: {
+  center: google.maps.LatLngLiteral;
+  zoom: number;
+}) {
+  const ref:any = useRef();
+
+  useEffect(() => {
+    new window.google.maps.Map(ref.current, {
+      center,
+      zoom,
+    });
+  });
+
+  return <div ref={ref} id="map" style={{ width: "800px", height: "500px" }} />;
+}
+
+const render = (status: Status): any => {
+  if (status === Status.LOADING) return <h3>{status}...</h3>;
+  if (status === Status.FAILURE) return <h3>{status}</h3>;
+  return null;
+};
+
+const mapCenter = { lat: 57.70921358199699, lng: 11.973907847754571 }
 
 const home = () => {
   return (
@@ -31,7 +61,9 @@ const home = () => {
           </div>
         </div>
       </div>
-      
+      <Wrapper apiKey={"AIzaSyAFkQtGnPJcOIjEQHqH52LrCPB1uSDP1uk"} render={render}>
+        <MapComponent center={ mapCenter } zoom={10}/>
+      </Wrapper>
     </main>
   )
 }
