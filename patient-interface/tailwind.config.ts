@@ -1,6 +1,8 @@
 import type { Config } from "tailwindcss";
 
-const config: Config = {
+const withMT = require("@material-tailwind/react/utils/withMT");
+
+module.exports = withMT({
   mode: 'jit',
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -28,12 +30,9 @@ const config: Config = {
       },
       fontFamily: {
         bebas: ["Bebas Neue", "sans-serif"],
-      },
-      fontFamily: {
         eina: ['var(--font-eina)']
       }
     },
-    plugins: [],
   },
-};
-export default config;
+  plugins: [],
+});
