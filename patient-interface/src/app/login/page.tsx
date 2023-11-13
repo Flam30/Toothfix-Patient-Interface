@@ -64,8 +64,11 @@ export default function Login() {
             </button>
           </div>
           {/* regirster button */}
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mu-4">
             <p className='text-center text-black'>Don&apos;t have an account? <Link className='underline' href="/register">Register</Link> now.</p>
+          </div>
+          <div className="flex items-center justify-between mu-4">
+            <p className='text-center text-black'>Problems logging in? <Link className='underline' href="/pwdreset">Reset your password</Link></p>
           </div>
         </form>
       </div>
