@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+  mode: 'jit',
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -28,6 +29,9 @@ const config: Config = {
       fontFamily: {
         bebas: ["Bebas Neue", "sans-serif"],
       },
+      fontFamily: {
+        eina: ['var(--font-eina)']
+      }
     },
     plugins: [],
   },
