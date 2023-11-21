@@ -1,27 +1,48 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 
 import {
   signInWithGoogle,
   auth,
-  logInWithEmailAndPassword
+  logInWithEmailAndPassword,
+  setPersistenceLocal,
+  setPersistenceSession,
 } from '../firebase';
 
 import { useAuthState } from 'react-firebase-hooks/auth';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function Login() {
+
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, loading, error] = useAuthState(auth);
 
+
+  async function loginButton(email: string, password: string) {
+  
+    // check the email format
+    // TODO: add some more checks
+    if (!email.includes('@')) {
+      alert("Invalid email format")
+      return
+    }
+  
+    // log in and redirect to dashboard if successful
+    await logInWithEmailAndPassword(email, password).then(() => {
+      router.push('/profile')
+    });
+  }
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md">
-        <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+        <form className="bg-white dark:bg-slate-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
           <div className="mb-4">
             <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
               Email
@@ -36,7 +57,7 @@ export default function Login() {
             />
           </div>
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
+            <label className="block text-gray-700  text-sm font-bold mb-2" htmlFor="password">
               Password
             </label>
             <input
@@ -48,6 +69,12 @@ export default function Login() {
               required
             />
           </div>
+          {/* remember me toggle */}
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" value="" id='presistanceToggle' className="sr-only peer" onChange={changePresistence} />
+            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+            <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Remember me</span>
+          </label>
           <div className="flex items-center justify-between">
             <button
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
@@ -61,14 +88,14 @@ export default function Login() {
               type="button" onClick={googleButton}
             >
               Sign In with Google
-            </button>
+            </button>googleButton
           </div>
           {/* regirster button */}
           <div className="flex items-center justify-between mu-4">
-            <p className='text-center text-black'>Don&apos;t have an account? <Link className='underline' href="/register">Register</Link> now.</p>
+            <p className='text-center text-black dark:text-gray-100'>Don&apos;t have an account? <Link className='underline' href="/register">Register</Link> now.</p>
           </div>
           <div className="flex items-center justify-between mu-4">
-            <p className='text-center text-black'>Problems logging in? <Link className='underline' href="/pwdreset">Reset your password</Link></p>
+            <p className='text-center text-black dark:text-gray-100'>Problems logging in? <Link className='underline' href="/pwdreset">Reset your password</Link></p>
           </div>
         </form>
       </div>
@@ -76,20 +103,19 @@ export default function Login() {
   );
 }
 
+function changePresistence(event: ChangeEvent<HTMLInputElement>) {
+  // if the Remember Me is checked
+  if(event.target.checked) {
+    setPersistenceLocal()
+  } else {
+    setPersistenceSession()
+  }
+}
+
 function googleButton() {
   signInWithGoogle()
 }
 
-function loginButton(email: string, password: string) {
-  // check the email format
-  // TODO: add some more checks
-  if (!email.includes('@')) {
-    alert("Invalid email format")
-    return
-  }
-
-  logInWithEmailAndPassword(email, password)
-}
 
 function registerButton() {
   console.log("register button clicked")

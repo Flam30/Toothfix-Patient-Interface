@@ -7,6 +7,9 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
   signOut,
+  setPersistence,
+  browserSessionPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 
 import {
@@ -18,15 +21,21 @@ import {
     addDoc,
 } from "firebase/firestore";
 
+import { useRouter } from 'next/router';
+
 import { firebaseConfig } from '../../config/firebaseApp.config';
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+let rememberMe: boolean = false;
+
 const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
   try {
+    applyPersistence();
+    
     const res = await signInWithPopup(auth, googleProvider);
     const user = res.user;
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
@@ -44,9 +53,26 @@ const signInWithGoogle = async () => {
   }
 };
 
+function setPersistenceLocal() {
+  rememberMe = true;
+}
+
+function setPersistenceSession() {
+  rememberMe = false;
+}
+
+function applyPersistence() {
+  if (rememberMe) {
+    setPersistence(auth, browserLocalPersistence);
+  } else {
+    setPersistence(auth, browserSessionPersistence);
+  }
+}
+
 const logInWithEmailAndPassword = async (email: string, password: string) => {
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
+  try {
+      applyPersistence();
+      return await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
       console.error(err);
     }
@@ -88,4 +114,6 @@ export {
     registerWithEmailAndPassword,
     sendPasswordReset,
     logout,
+    setPersistenceLocal,
+    setPersistenceSession,
 };
