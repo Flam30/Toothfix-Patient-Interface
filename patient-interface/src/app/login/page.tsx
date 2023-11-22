@@ -22,6 +22,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, loading, error] = useAuthState(auth);
+  const [showError, setShowError] = useState(false);
 
 
   async function loginButton(email: string, password: string) {
@@ -36,7 +37,20 @@ export default function Login() {
     // log in and redirect to dashboard if successful
     await logInWithEmailAndPassword(email, password).then(() => {
       router.push('/profile')
+    }).catch(() => {
+      showErrorBanner()
     });
+  }
+
+
+  async function googleButton() {
+    await signInWithGoogle().then(() => {
+      router.push('/profile')
+    });
+  }
+
+  function showErrorBanner() {
+    setShowError(true)
   }
 
   return (
@@ -88,7 +102,7 @@ export default function Login() {
               type="button" onClick={googleButton}
             >
               Sign In with Google
-            </button>googleButton
+            </button>
           </div>
           {/* regirster button */}
           <div className="flex items-center justify-between mu-4">
@@ -98,6 +112,14 @@ export default function Login() {
             <p className='text-center text-black dark:text-gray-100'>Problems logging in? <Link className='underline' href="/pwdreset">Reset your password</Link></p>
           </div>
         </form>
+        {/* error banner */}
+        { showError ? 
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+            <strong className="font-bold">Login failed!</strong>
+            <span className="block sm:inline">  Email or password is wrong</span>  
+          </div>
+          : null
+        }
       </div>
     </div>
   );
@@ -110,13 +132,4 @@ function changePresistence(event: ChangeEvent<HTMLInputElement>) {
   } else {
     setPersistenceSession()
   }
-}
-
-function googleButton() {
-  signInWithGoogle()
-}
-
-
-function registerButton() {
-  console.log("register button clicked")
 }

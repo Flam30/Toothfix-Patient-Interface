@@ -10,7 +10,7 @@ import {
 
 import { useAuthState } from 'react-firebase-hooks/auth';
 
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
 export default function Register() {
@@ -18,6 +18,27 @@ export default function Register() {
     const [password, setPassword] = useState("");
     const [displayName, setDisplayName] = useState("");
     const [user, loading, error] = useAuthState(auth);
+
+    const router = useRouter();
+
+    async function googleButton() {
+      await signInWithGoogle().then(() => {
+        router.push('/profile')
+      });
+    }
+  
+    async function registerButton(name: string, email: string, password: string) {
+        // check the email format
+        // TODO: add some more checks
+        if (!email.includes('@')) {
+            alert("Invalid email format")
+            return
+        }
+    
+        await registerWithEmailAndPassword(name, email, password).then(() => {
+            router.push('/profile')
+        });
+    }
   
     return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -82,19 +103,4 @@ export default function Register() {
       </div>
     </div>
   )
-}
-
-function googleButton() {
-    signInWithGoogle()
-}
-
-function registerButton(name: string, email: string, password: string) {
-    // check the email format
-    // TODO: add some more checks
-    if (!email.includes('@')) {
-        alert("Invalid email format")
-        return
-    }
-
-    registerWithEmailAndPassword(name, email, password)
 }
