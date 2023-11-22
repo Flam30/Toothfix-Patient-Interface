@@ -35,7 +35,7 @@ const googleProvider = new GoogleAuthProvider();
 const signInWithGoogle = async () => {
   try {
     applyPersistence();
-    
+
     const res = await signInWithPopup(auth, googleProvider);
     const user = res.user;
     const q = query(collection(db, "users"), where("uid", "==", user.uid));
@@ -74,7 +74,7 @@ const logInWithEmailAndPassword = async (email: string, password: string) => {
       applyPersistence();
       return await signInWithEmailAndPassword(auth, email, password);
     } catch (err) {
-      console.error(err);
+      throw err;
     }
 };
 
