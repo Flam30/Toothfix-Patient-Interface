@@ -1,8 +1,10 @@
 import React from 'react'
+import Navbar from '.././components/Navbar'
 
-const page = () => {
+const booking = () => {
   return (
     <div>
+      <Navbar/>
       <table className="w-full table-fixed text-sm text-center text-gray-500 dark:text-gray-400">
         <thead className="text-gray-700 uppercase dark:text-gray-400">
           <tr>
@@ -26,12 +28,9 @@ const page = () => {
             </th>
           </tr>
         </thead>
-        <tbody>
-
-        </tbody>
       </table>
     </div>
   )
 }
 
-export default page
+export default booking
