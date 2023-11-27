@@ -2,14 +2,15 @@
 
 import React, { useEffect, useState } from 'react';
 
+// FIREBASE
 import {
   signInWithGoogle,
   auth,
   registerWithEmailAndPassword
 } from '../firebase';
-
 import { useAuthState } from 'react-firebase-hooks/auth';
 
+// ROUTING AND LINKING
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 
