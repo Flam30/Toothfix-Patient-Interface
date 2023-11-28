@@ -33,7 +33,7 @@ export default function Booking() {
   async function sendBooking(start: string, end: string) {
     // send to the API gateway
     await axios.post(`${API_URL}/booking/bookings`, {
-      date: "2021-27-11",
+      date: "2021-11-11",
       start: start,
       end: end,
       dentist: "6564873855bd195cdf2a7a4e",
