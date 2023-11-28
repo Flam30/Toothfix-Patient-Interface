@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
+import Navbar from '.././components/Navbar';
 
 // FIREBASE
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -47,6 +48,7 @@ export default function Booking() {
 
   return (
     <div>
+      <Navbar/>
       <form className="bg-slate-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
 
         <label htmlFor="meeting-start-time">Appointment start:</label>
@@ -82,6 +84,7 @@ export default function Booking() {
       </form>
 
       
+      
       <table className="w-full table-fixed text-sm text-center text-gray-500 dark:text-gray-400">
         <thead className="text-gray-700 uppercase dark:text-gray-400">
           <tr>
@@ -105,9 +108,6 @@ export default function Booking() {
             </th>
           </tr>
         </thead>
-        <tbody>
-
-        </tbody>
       </table>
     </div>
   )
