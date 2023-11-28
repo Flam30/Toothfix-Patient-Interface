@@ -6,52 +6,7 @@ import Faq from './components/Faq'
 import Navbar from './components/Navbar'
 import Link from "next/link";
 import { Wrapper, Status } from "@googlemaps/react-wrapper";
-
-// Default center of the map
-const mapCenter = { lat: 57.70921358199699, lng: 11.973907847754571 }
-
-// Array of markers that are displayed on the map
-const markersArray = [
-  {lat: 57.70981182062649, lng: 11.939436298143544},
-  {lat: 57.70061334271214, lng: 11.954265175470795}
-]
-
-export const addMarkers = ({
-  markers,
-  map,
-}: {
-  markers: ReadonlyArray<google.maps.LatLngLiteral>;
-  map: google.maps.Map | null | undefined;
-}) =>
-  markers.map(
-    position =>
-      new google.maps.Marker({
-        position,
-        map,
-      }),
-  );
-
-function MapComponent({
-  center,
-  zoom,
-  markers
-}: {
-  center: google.maps.LatLngLiteral;
-  zoom: number;
-  markers: ReadonlyArray<google.maps.LatLngLiteral>
-}) {
-  const ref:any = useRef();
-
-  useEffect(() => {
-    const map = new window.google.maps.Map(ref.current, {
-      center,
-      zoom,
-    });
-    addMarkers({ markers, map });
-  });
-
-  return <div ref={ref} id="map" className= "w-full h-[280px] sm:h-[450px] md:h-[550px]"/>;
-}
+import { MapComponent } from './components/MapComponent';
 
 const render = (status: Status): any => {
   if (status === Status.LOADING) return <h3>{status}...</h3>;
@@ -92,7 +47,7 @@ const home = () => {
         <div className='w-full'>
           <h1 className='font-eina font-bold text-2xl sm:text-4xl lg:text-5xl mt-24 mb-4'>Map</h1>
           <Wrapper apiKey={"AIzaSyAFkQtGnPJcOIjEQHqH52LrCPB1uSDP1uk"} render={render}>
-            <MapComponent center={ mapCenter } zoom={12} markers={ markersArray }/>
+            <MapComponent zoom={12}/>
           </Wrapper>
         </div>
         <Faq/>
