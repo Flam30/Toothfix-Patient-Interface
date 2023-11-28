@@ -1,18 +1,12 @@
 'use client';
 
-import React, { useRef, useEffect } from 'react'
+import React from 'react'
 import Image from 'next/image'
 import Faq from './components/Faq'
 import Navbar from './components/Navbar'
 import Link from "next/link";
-import { Wrapper, Status } from "@googlemaps/react-wrapper";
-import { MapComponent } from './components/MapComponent';
 
-const render = (status: Status): any => {
-  if (status === Status.LOADING) return <h3>{status}...</h3>;
-  if (status === Status.FAILURE) return <h3>{status}</h3>;
-  return null;
-};
+import { MapComponent } from './components/MapComponent';
 
 const home = () => {
   return (
@@ -46,9 +40,7 @@ const home = () => {
         </div>
         <div className='w-full'>
           <h1 className='font-eina font-bold text-2xl sm:text-4xl lg:text-5xl mt-24 mb-4'>Map</h1>
-          <Wrapper apiKey={"AIzaSyAFkQtGnPJcOIjEQHqH52LrCPB1uSDP1uk"} render={render}>
-            <MapComponent zoom={12}/>
-          </Wrapper>
+          <MapComponent/>
         </div>
         <Faq/>
       </div>
