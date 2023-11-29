@@ -14,6 +14,7 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { set } from 'firebase/database';
 
 export default function Login() {
 
@@ -23,6 +24,7 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [user, loading, error] = useAuthState(auth);
   const [showError, setShowError] = useState(false);
+  const [redirectPath, setRedirectPath] = useState('/profile')
 
 
   async function loginButton(email: string, password: string) {
@@ -36,16 +38,15 @@ export default function Login() {
   
     // log in and redirect to dashboard if successful
     await logInWithEmailAndPassword(email, password).then(() => {
-      router.push('/profile')
+      router.push('/')
     }).catch(() => {
       showErrorBanner()
     });
   }
 
-
   async function googleButton() {
     await signInWithGoogle().then(() => {
-      router.push('/profile')
+      router.push('/')
     });
   }
 

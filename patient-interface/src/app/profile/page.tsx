@@ -1,6 +1,8 @@
 'use client';
 
 import React, { useEffect, useState } from "react";
+
+// FIREBASE
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, db, logout } from "../firebase";
 import { query, collection, getDocs, where } from "firebase/firestore";
@@ -30,7 +32,10 @@ export default function Profile() {
     };
 
     if(loading) return;
-    if(!user) { redirect('/login'); return; }
+    if(!user) { 
+      redirect('/login');
+      return;
+    }
     fetchUserName();
   }, [user, loading]);
 
