@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
                 <ul className="flex items-center space-x-9 cursor-auto mr-5 font-bebas text-[2.9rem] text-text">
                     {/* TODO add links and hover animations maybe*/}
                     <li className=" hover:text-primary"><Link href="/booking">Book</Link></li>
-                    <li className=" hover:text-primary"><Link href="https://http.dog/204.jpg">My pages</Link></li>
+                    <li className=" hover:text-primary"><Link href="/profile">My pages</Link></li>
                 </ul> 
             </nav>
     )
