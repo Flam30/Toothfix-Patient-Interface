@@ -12,7 +12,7 @@ import axios from "axios";
 const API_URL = "http://localhost:3005";
 
 // ROUTING AND LINKING
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
 export default function Booking() {
@@ -23,15 +23,43 @@ export default function Booking() {
   const [user, loading, error] = useAuthState(auth);
 
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  // selected clinic and dentist
+  const [selectedClinic, setSelectedClinic] = useState<any>({});
+  const [selectedDentist, setSelectedDentist] = useState<any>({});
 
   // Redirect if not logged in
   useEffect(() => {
+    function getSearchParams() {
+      const clinic = searchParams.get('clinic');
+      const dentist = searchParams.get('dentist');
+
+      // fetch the clinic
+      axios.get(`${API_URL}/booking/clinics/${clinic}`)
+      .then((res) => {
+        setSelectedClinic(res.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+
+      // fetch the dentist
+      axios.get(`${API_URL}/booking/dentists/${dentist}`)
+      .then((res) => {
+        setSelectedDentist(res.data);
+      }).catch((err) => {
+        console.log(err);
+      });
+    }
+
     if(loading) return;
     if(!user) { 
       router.push('/login');
       return; 
     }
-  }, [user, loading, router]);
+
+    getSearchParams();
+  }, [user, loading, router, searchParams]);
 
   // send the booking info
   async function sendBooking(start: string, end: string) {
@@ -52,6 +80,19 @@ export default function Booking() {
   return (
     <div>
       <Navbar/>
+      {/* display the current clinic and the dentist */}
+      <h1 className="text-3xl text-center">Book an appointment</h1>
+      <h2 className="text-xl text-center">Clinic: {selectedClinic.name}</h2>
+      <h2 className="text-xl text-center">Dentist: {selectedDentist.name}</h2>
+
+      {/* reselect a clinic button */}
+      <Link href="/clinicselect">
+        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+          Reselect clinic
+        </button>
+      </Link>
+
+      {/* form for the appointment */}
       <form className="bg-slate-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
 
         <label htmlFor="meeting-start-time">Appointment start:</label>

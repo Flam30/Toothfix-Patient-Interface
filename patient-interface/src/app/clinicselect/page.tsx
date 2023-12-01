@@ -79,6 +79,23 @@ export default function ClinicSelect() {
         setFilteredDentists(dentists.filter(dentist => dentist.clinic === e.target.value));
     }
 
+    // when the dentist is selected
+    function handleDentistChange(e: any) {
+        setSelectedDentist(e.target.value);
+    }
+
+    // select button
+    function handleSelect() {
+        // check that the clinic and dentist are selected
+        if (selectedClinic === "" || selectedDentist === "") {
+            alert("Please select a clinic and a dentist.");
+            return;
+        }
+
+        // route to the bookings page
+        router.push(`/booking/?clinic=${selectedClinic}&dentist=${selectedDentist}`, );
+    }
+
     return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <div className="w-full max-w-md">
@@ -96,10 +113,10 @@ export default function ClinicSelect() {
             <label htmlFor='dentists' className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select a dentist</label>
             {/* if no clinic is selected, disable */}
             {/* only show dentists that are in the selected clinic */}
-            <select id="dentists" disabled={!dentistActive} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <select onChange={handleDentistChange} id="dentists" disabled={!dentistActive} className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
             <option selected>Choose a dentist</option>
             {filteredDentists.map((dentist) => (
-                <option key={dentist.personnummer} value={dentist.personnummer}>{dentist.name}</option>
+                <option key={dentist._id} value={dentist._id}>{dentist.name}</option>
             ))}
             </select>
         </div>
@@ -107,7 +124,7 @@ export default function ClinicSelect() {
             <button
                 className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
                 type="button"
-                
+                onClick={handleSelect}
             >
                 Select
             </button>
