@@ -24,7 +24,6 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [user, loading, error] = useAuthState(auth);
   const [showError, setShowError] = useState(false);
-  const [redirectPath, setRedirectPath] = useState('/profile')
 
 
   async function loginButton(email: string, password: string) {
