@@ -29,6 +29,10 @@ export default function Booking() {
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
 
+  // BANNERS
+  const [showSuccess, setShowSuccess] = useState(false);
+  const [showLoading, setShowLoading] = useState(false);
+
   // time things
   const [currentWeek, setCurrentWeek] = useState<number>(moment().week());
   const [selectedWeek, setSelectedWeek] = useState<number>(moment().week());
@@ -54,10 +58,10 @@ export default function Booking() {
   // generate the appointments for each day of the week
   // if the appintment is in the fetched set, put it in the appointments array
   // otherwise create a new disabled appointment
-  const generateAppointments = useCallback(
-    (fetchedAppointments: any[]) => {
+  let generateAppointments = useCallback(
+    (fetchedAppointments: any[], week: number) => {
       let appointmentsArray: any[] = [];
-      let day = moment().startOf("week").week(selectedWeek);
+      let day = moment().startOf("week").week(week);
 
       // go thru each day
       for (let i = 0; i < 7; i++) {
@@ -90,7 +94,7 @@ export default function Booking() {
 
       return appointmentsArray;
     },
-    [selectedWeek]
+    []
   );
 
   // slice the appointments into a 2d array
@@ -121,7 +125,7 @@ export default function Booking() {
       currentHour++;
 
       // if the current hour is 8, iterate to the next day
-      if (currentHour === 8) {
+      if (currentHour >= 8) {
         currentHour = 0;
         currentDay++;
       }
@@ -140,7 +144,8 @@ export default function Booking() {
           `${API_URL}/availability/slots/weekNumber/${weekNumber}/dentist/${selectedDentist._id}`
         )
         .then((res) => {
-          setAppointments2d(sliceAppointments(generateAppointments(res.data)));
+          console.log(res.data);
+          setAppointments2d(sliceAppointments(generateAppointments(res.data, weekNumber)));
         })
         .catch((err) => {
           console.log(err);
@@ -211,20 +216,24 @@ export default function Booking() {
   ]);
 
   // send the booking info
-  async function sendBooking(start: string, end: string) {
+  async function sendBooking(slotId: string, date: string) {
     // send to the API gateway
     await axios
       .post(`${API_URL}/booking/bookings`, {
-        date: "2021-11-11",
-        start: start,
-        end: end,
-        dentist: "6564873855bd195cdf2a7a4e",
-        patient: "6564cea19cbd695c17275662",
+        date: date,
+        start: "deprecated",
+        end: "deprecated",
+        patient: user?.uid,
+        patientEmail: user?.email,
+        dentist: selectedDentist,
+        slotId: slotId,
       })
       .then(() => {
-        router.push("/booking");
+        setShowLoading(false);
+        setShowSuccess(true);
       })
       .catch((err) => {
+        setShowLoading(false);
         console.log(err);
       });
   }
@@ -321,7 +330,10 @@ export default function Booking() {
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
                     onClick={() => {
                       if (appointment._id !== "0")
-                        sendBooking(appointment.date, appointment.date);
+                      {
+                        setShowLoading(true);
+                        sendBooking(appointment._id, appointment.date);
+                      }
                     }}
                     disabled={appointment._id === "0"}
                   >
@@ -331,8 +343,25 @@ export default function Booking() {
               ))}
             </tr>
           ))}
+
         </thead>
       </table>
+        {/* loading banner */}
+        { showLoading ?
+          <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
+            <strong className="font-bold">Processing!</strong>
+            <span className="block sm:inline">  Please wait a moment</span>
+          </div>
+          : null
+        }
+        {/* success banner */}
+        { showSuccess ? 
+          <div className="bg-red-100 border border-light-green-400 text-light-green-700 px-4 py-3 rounded relative" role="alert">
+            <strong className="font-bold">Success!</strong>
+            <span className="block sm:inline">  A booking request was sent</span>  
+          </div>
+          : null
+        }
     </div>
   );
 }
