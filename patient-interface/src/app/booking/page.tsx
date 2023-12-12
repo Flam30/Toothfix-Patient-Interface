@@ -1,7 +1,15 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from "react";
-import Navbar from '.././components/Navbar';
+import React, { useEffect, useState, useCallback } from "react";
+import Navbar from ".././components/Navbar";
+
+// TIME
+import moment from "moment";
+const MAX_WEEKS = 52;
+const DAY_START = 9;
+const DAY_END = 17;
+
+// selected clinic and dentist
 
 // FIREBASE
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -12,74 +20,238 @@ import axios from "axios";
 const API_URL = "http://localhost:3005";
 
 // ROUTING AND LINKING
-import { useRouter, useSearchParams } from 'next/navigation';
-import Link from 'next/link';
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { set } from "firebase/database";
 
 export default function Booking() {
   // start and end of the appointment
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
-  
+
+  // time things
+  const [currentWeek, setCurrentWeek] = useState<number>(moment().week());
+  const [selectedWeek, setSelectedWeek] = useState<number>(moment().week());
+
+  // appointment slots
+  const [appointments, setAppointments] = useState<any[]>();
+  // appointments sliced into a 2d array of hours
+  const [appointments2d, setAppointments2d] = useState<any[][]>([]);
+
+  const [isFetched, setIsFetched] = useState<boolean>(false);
+
+  // fetched appointments
+  const [fetchedAppointments, setFetchedAppointments] = useState<any[]>([]);
+
   const [user, loading, error] = useAuthState(auth);
+
+  const [selectedClinic, setSelectedClinic] = useState<any>({});
+  const [selectedDentist, setSelectedDentist] = useState<any>({});
 
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  // selected clinic and dentist
-  const [selectedClinic, setSelectedClinic] = useState<any>({});
-  const [selectedDentist, setSelectedDentist] = useState<any>({});
+  // generate the appointments for each day of the week
+  // if the appintment is in the fetched set, put it in the appointments array
+  // otherwise create a new disabled appointment
+  const generateAppointments = useCallback(
+    (fetchedAppointments: any[]) => {
+      let appointmentsArray: any[] = [];
+      let day = moment().startOf("week").week(selectedWeek);
 
-  // Redirect if not logged in
+      // go thru each day
+      for (let i = 0; i < 7; i++) {
+        // go thru each hour from day start to day end
+        for (let j = DAY_START; j < DAY_END; j++) {
+          // get the current hour in ISO format
+          let currentHour = moment(day)
+            .hour(j)
+            .format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+          // check if the current hour is in the fetched appointments
+          let fetchedAppointment = fetchedAppointments.find((appointment) =>
+            moment(appointment.date).isSame(currentHour)
+          );
+          // if it is, add it to the appointments array
+          if (fetchedAppointment) {
+            appointmentsArray.push(fetchedAppointment);
+          } else {
+            // otherwise create a new disabled appointment
+            appointmentsArray.push({
+              // id 0 means it is disabled
+              _id: "0",
+              date: currentHour,
+            });
+          }
+        }
+
+        // iterate to the next day
+        day = moment(day).add(1, "d");
+      }
+
+      return appointmentsArray;
+    },
+    [selectedWeek]
+  );
+
+  // slice the appointments into a 2d array
+  // each row represents an hour and columns represent days
+  const sliceAppointments = useCallback((appointments: any[]) => {
+    // we have 8 time slots per day (9am to 5pm)
+    // we have 7 days per week
+    let appointments2dArray: any[8][7] = [[], [], [], [], [], [], [], []];
+
+    // appointments array SHOULD BE already construcred and sorted by date
+    // the colums of the array are the days of the week so will always be 7
+    // go thru each entry in the appointments array
+
+    // go thru every entry in the appointments array
+    // day from 0 to 6
+    let currentDay = 0;
+    // hour from 0 to 7, where 0 is 9am and 7 is 5pm
+    let currentHour = 0;
+
+    for (let i = 0; i < appointments.length; i++) {
+      // get the current appointment
+      let appointment = appointments[i];
+
+      // put the appointment in the 2d array
+      appointments2dArray[currentHour][currentDay] = appointment;
+
+      // iterate to the next hour
+      currentHour++;
+
+      // if the current hour is 8, iterate to the next day
+      if (currentHour === 8) {
+        currentHour = 0;
+        currentDay++;
+      }
+    }
+
+    console.log(appointments2dArray);
+    return appointments2dArray;
+  }, []);
+
+  // fetch the appointments from the API gateway
+  const fetchAppointments = useCallback(
+    (weekNumber: number) => {
+      // fetch the appointments
+      axios
+        .get(
+          `${API_URL}/availability/slots/weekNumber/${weekNumber}/dentist/${selectedDentist._id}`
+        )
+        .then((res) => {
+          setAppointments2d(sliceAppointments(generateAppointments(res.data)));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    [selectedDentist, sliceAppointments, generateAppointments]
+  );
+
+  // USE EFFECT HOOK
   useEffect(() => {
     function getSearchParams() {
-      const clinic = searchParams.get('clinic');
-      const dentist = searchParams.get('dentist');
+      const clinic = searchParams.get("clinic");
+      const dentist = searchParams.get("dentist");
 
       // fetch the clinic
-      axios.get(`${API_URL}/booking/clinics/${clinic}`)
-      .then((res) => {
-        setSelectedClinic(res.data);
-      }).catch((err) => {
-        console.log(err);
-      });
+      axios
+        .get(`${API_URL}/booking/clinics/${clinic}`)
+        .then((res) => {
+          setSelectedClinic(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
 
       // fetch the dentist
-      axios.get(`${API_URL}/booking/dentists/${dentist}`)
-      .then((res) => {
-        setSelectedDentist(res.data);
-      }).catch((err) => {
-        console.log(err);
-      });
+      axios
+        .get(`${API_URL}/booking/dentists/${dentist}`)
+        .then((res) => {
+          setSelectedDentist(res.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
 
-    if(loading) return;
-    if(!user) { 
-      router.push('/login');
-      return; 
+    if (loading) return;
+    if (!user) {
+      router.push("/login");
+      return;
     }
 
-    getSearchParams();
-  }, [user, loading, router, searchParams]);
+    if (selectedClinic._id === undefined || selectedDentist._id === undefined) {
+      getSearchParams();
+    }
+
+    if (
+      !isFetched &&
+      !(selectedClinic._id === undefined || selectedDentist._id === undefined)
+    ) {
+      fetchAppointments(selectedWeek);
+
+      setIsFetched(true);
+    }
+  }, [
+    user,
+    loading,
+    router,
+    searchParams,
+    selectedWeek,
+    fetchedAppointments,
+    generateAppointments,
+    sliceAppointments,
+    fetchAppointments,
+    selectedClinic,
+    selectedDentist,
+    isFetched,
+    appointments2d,
+  ]);
 
   // send the booking info
   async function sendBooking(start: string, end: string) {
     // send to the API gateway
-    await axios.post(`${API_URL}/booking/bookings`, {
-      date: "2021-11-11",
-      start: start,
-      end: end,
-      dentist: "6564873855bd195cdf2a7a4e",
-      patient: "6564cea19cbd695c17275662"
-    }).then(() => {
-      router.push('/booking')
-    }).catch((err) => {
-      console.log(err);
-    });
+    await axios
+      .post(`${API_URL}/booking/bookings`, {
+        date: "2021-11-11",
+        start: start,
+        end: end,
+        dentist: "6564873855bd195cdf2a7a4e",
+        patient: "6564cea19cbd695c17275662",
+      })
+      .then(() => {
+        router.push("/booking");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  // scoll the week forward
+  function scrollWeekForward() {
+    if (selectedWeek < MAX_WEEKS) {
+      // refetch the appointments
+      fetchAppointments(selectedWeek + 1);
+
+      setSelectedWeek(selectedWeek + 1);
+    }
+  }
+
+  // scroll the week backward
+  function scrollWeekBackward() {
+    if (selectedWeek > currentWeek) {
+      // refetch the appointments
+      fetchAppointments(selectedWeek - 1);
+
+      setSelectedWeek(selectedWeek - 1);
+    }
   }
 
   return (
     <div>
-      <Navbar/>
+      <Navbar />
       {/* display the current clinic and the dentist */}
       <h1 className="text-3xl text-center">Book an appointment</h1>
       <h2 className="text-xl text-center">Clinic: {selectedClinic.name}</h2>
@@ -92,46 +264,33 @@ export default function Booking() {
         </button>
       </Link>
 
-      {/* form for the appointment */}
-      <form className="bg-slate-700 shadow-md rounded px-8 pt-6 pb-8 mb-4">
-
-        <label htmlFor="meeting-start-time">Appointment start:</label>
-
-        <input
-          className="w-200 px-3 py-2 mb-3 text-sm leading-tight text-gray-800 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-          type="datetime-local"
-          onChange={(e) => setStart(e.target.value)}
-          id="meeting-start-time"
-          name="meeting-start-time"
-          min="2023-11-27T19:30"
-          max="2024-11-27T19:30" />
-
-        <label htmlFor="meeting-end-time">Appointment end:</label>
-
-        <input
-          className="w-200 px-3 py-2 mb-3 text-sm leading-tight text-gray-800 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-          type="datetime-local"
-          onChange={(e) => setEnd(e.target.value)}
-          id="meeting-end-time"
-          name="meeting-end-time"
-          min="2023-11-27T19:30"
-          max="2024-11-27T19:30" />
-
+      {/* week panel */}
+      <div className="flex justify-center">
         <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="button"
-            onClick={() => sendBooking(start, end)}
-          >
-            Send
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+          onClick={scrollWeekBackward}
+          disabled={selectedWeek <= currentWeek}
+        >
+          Previous week
         </button>
+        <h2 className="text-xl text-center">Week {selectedWeek}</h2>
+        {/* current week */}
+        <h2 className="text-xl text-center">(Current week: {currentWeek})</h2>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+          onClick={scrollWeekForward}
+          disabled={selectedWeek >= MAX_WEEKS}
+        >
+          Next week
+        </button>
+      </div>
 
-      </form>
-
-      
-      
       <table className="w-full table-fixed text-sm text-center text-gray-500 dark:text-gray-400">
         <thead className="text-gray-700 uppercase dark:text-gray-400">
           <tr>
+            <th scope="col" className="px-6 py-3 bg-gray-50 dark:bg-gray-800">
+              Sunday
+            </th>
             <th scope="col" className="px-6 py-3 bg-gray-50 dark:bg-gray-800">
               Monday
             </th>
@@ -151,8 +310,29 @@ export default function Booking() {
               Saturday
             </th>
           </tr>
+          {/* make a button for each appointment */}
+          {/* if the _id is 0, the appointment is unavailable */}
+          {/* rows in the array are hours and the columns are days */}
+          {appointments2d.map((hour, index) => (
+            <tr key={index}>
+              {hour.map((appointment) => (
+                <td key={appointment._id} className="px-6 py-3">
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+                    onClick={() => {
+                      if (appointment._id !== "0")
+                        sendBooking(appointment.date, appointment.date);
+                    }}
+                    disabled={appointment._id === "0"}
+                  >
+                    {moment(appointment.date).format("HH:mm")}
+                  </button>
+                </td>
+              ))}
+            </tr>
+          ))}
         </thead>
       </table>
     </div>
-  )
+  );
 }
