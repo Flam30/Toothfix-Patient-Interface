@@ -40,9 +40,10 @@ export default function Profile() {
   return (
     <main className="flex min-h-screen flex-col items-center">
       <Navbar />
-      <div className="flex flex-col z-10 min-h-screen items-center p-10 sm:p-15 lg:p-28">
-        <div>
-          <div>
+      <div className="flex flex-col z-10 w-full min-h-screen items-center p-10 sm:p-15 lg:p-28">
+        <div className="w-full">
+          <div className="dark:bg-gray-800 p-6 rounded-lg shadow-xl">
+            <p className="font-eina font-bold text-lg">Details</p>
             Logged in as
             <div>{name}</div>
             <div>{user?.email}</div>
