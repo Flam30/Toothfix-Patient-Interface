@@ -41,12 +41,44 @@ export default function Profile() {
     <main className="flex min-h-screen flex-col items-center">
       <Navbar />
       <div className="flex flex-col z-10 w-full min-h-screen items-center p-10 sm:p-15 lg:p-28">
-        <div className="w-full">
-          <div className="dark:bg-gray-800 p-6 rounded-lg shadow-xl">
-            <p className="font-eina font-bold text-lg">Details</p>
-            Logged in as
-            <div>{name}</div>
-            <div>{user?.email}</div>
+        <div className="flex flex-col w-full">
+          <p className="font-eina font-bold mb-5 text-3xl sm:text-4xl lg:text-5xl">
+            Details
+          </p>
+          <div className="flex flex-row justify-between items-baseline w-full p-0">
+            <p className="font-eina font-semibold text-2xl sm:text-3xl lg:text-4xl">
+              Placeholder Name
+              {name}
+            </p>
+            <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl">
+              name
+            </p>
+          </div>
+          <div className="flex flex-row justify-between items-baseline w-full p-0">
+            <p className="font-eina font-semibold text-2xl sm:text-3xl lg:text-4xl">
+              {user?.email}
+            </p>
+            <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl">
+              email
+            </p>
+          </div>
+          <div className="flex flex-row justify-between items-baseline w-full p-0">
+            <p className="font-eina font-semibold text-2xl sm:text-3xl lg:text-4xl">
+              +079 123 45 67
+            </p>
+            <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl">
+              phone number
+            </p>
+          </div>
+          <div className="flex flex-row justify-between items-baseline w-full p-0">
+            <p className="font-eina font-semibold text-2xl sm:text-3xl lg:text-4xl">
+              YYYY-MM-DD
+            </p>
+            <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl">
+              personnumer
+            </p>
+          </div>
+          <div className="mt-10">
             <button
               onClick={logout}
               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
