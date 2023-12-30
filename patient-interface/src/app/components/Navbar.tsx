@@ -4,7 +4,6 @@ import Link from "next/link";
 
 const Navbar: React.FC = () => {
   return (
-    //TODO change bg color to match theme
     <nav className="bg-background flex items-center justify-between p-4 min-w-full">
       <div className="flex items-center">
         <Link href="/">
