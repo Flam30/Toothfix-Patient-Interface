@@ -138,6 +138,8 @@ export default function Booking() {
   // fetch the appointments from the API gateway
   const fetchAppointments = useCallback(
     (weekNumber: number) => {
+      // clean the appointments
+      setAppointments2d([]);
       // fetch the appointments
       axios
         .get(
