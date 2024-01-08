@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { redirect } from "next/navigation";
-import Link from "next/link";
 
 // FIREBASE
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -43,7 +42,7 @@ const Details: React.FC = () => {
             onClick={logout}
           >
             <span className="underline underline-offset-2 decoration-darkaccent lg:no-underline bg-left-bottom bg-gradient-to-r from-darkaccent to-darkaccent bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-              log out?
+              log out
             </span>
           </button>
         </div>

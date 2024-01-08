@@ -35,7 +35,7 @@ const Bookings: React.FC = () => {
       <h1 className="font-eina font-bold mb-5 text-3xl sm:text-4xl lg:text-5xl">
         Bookings
       </h1>
-      <div className="hidden sm:flex flex-row flex-nowrap items-center justify-between px-1 w-full h-[47px] bg-[#d4ecf7] font-eina font-semibold text:xl lg:text-2xl">
+      <div className="hidden sm:flex flex-row flex-nowrap items-center justify-between px-2 w-full h-[47px] bg-[#d4ecf7] font-eina font-semibold text:xl lg:text-2xl">
         <div className="flex flex-row flex-nowrap shrink-0">
           {"11:30 - 12:00"}
           <span className="mx-1 lg:mx-2 opacity-80">on</span>
@@ -49,18 +49,13 @@ const Bookings: React.FC = () => {
             {"J. Smithsoniannnnnnnnnnnn"}
           </p>
         </div>
-        <div className="mx-1 lg:mx-2 font-eina font-semibold opacity-70 truncate">
-          {
-            "........................................................................................................................................"
-          }
-        </div>
         <div>
           <button
             className="group transition-all duration-300 ease-in-out"
             onClick={logout}
           >
             <span className="underline lg:no-underline underline-offset-1 bg-left-bottom bg-gradient-to-r from-text to-text bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
-              cancel?
+              cancel
             </span>
           </button>
         </div>
@@ -90,7 +85,7 @@ const Bookings: React.FC = () => {
               onClick={logout}
             >
               <span className="underline underline-offset-1 decoration-1">
-                cancel?
+                cancel
               </span>
             </button>
           </div>
