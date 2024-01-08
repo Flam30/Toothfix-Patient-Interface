@@ -49,16 +49,20 @@ export default function Profile() {
           <div className="flex flex-row flex-nowrap items-center justify-between px-1 w-full h-[47px] bg-[#d4ecf7] font-eina font-semibold text:xl lg:text-2xl">
             <div className="flex flex-row flex-nowrap shrink-0">
               {"11:30 - 12:00"}
-              <span className="mx-2 opacity-80">on</span>
+              <span className="mx-1 lg:mx-2 opacity-80">on</span>
               {"12/12/2023"}
-              <span className="mx-2 opacity-80">at</span>
-              {"Summerbloom Dental"}
-              <span className="mx-2 opacity-80">w/</span>
-              {"J. Smith"}
+              <span className="mx-1 lg:mx-2 opacity-80">at</span>
+              <p className="truncate text-ellipsis max-w-[210px] lg:max-w-[340px]">
+                {"Summerbloom Dental Office"}
+              </p>
+              <span className="mx-1 lg:mx-2 opacity-80">w/</span>
+              <p className="truncate text-ellipsis max-w-[113px] lg:max-w-[260px]">
+                {"J. Smithsoniannnnnnnnnnnn"}
+              </p>
             </div>
-            <div className="font-eina font-semibold mx-2 opacity-70 truncate">
+            <div className="mx-1 lg:mx-2 font-eina font-semibold opacity-70 truncate">
               {
-                "........................................................................................................................................."
+                "........................................................................................................................................"
               }
             </div>
             <div>
