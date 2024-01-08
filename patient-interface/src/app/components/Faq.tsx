@@ -40,7 +40,7 @@ const Faq: React.FC = () => {
   return (
     <>
       <div className="flex flex-col items-start">
-        <h1 className="font-eina font-bold text-2xl sm:text-4xl lg:text-5xl mt-24">
+        <h1 className="font-eina font-bold text-2xl sm:text-4xl lg:text-5xl mt-10">
           FAQ
         </h1>
         <Accordion open={openAcc1} icon={<Icon id={1} open={openAcc1} />}>

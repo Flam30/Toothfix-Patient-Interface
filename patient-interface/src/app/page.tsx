@@ -39,13 +39,13 @@ const Home = () => {
   return (
     <main className="flex min-h-screen flex-col items-center">
       <Navbar />
-      <div className="flex flex-col z-10 min-h-screen items-center p-8 sm:p-15 lg:p-28">
+      <div className="flex flex-col z-10 min-h-screen items-center p-3 sm:p-10 lg:p-28">
         <div className="flex flex-row w-full items-center justify-between">
           <div className="flex flex-col items-center font">
             <div className="flex flex-col items-start w-[252.05px] sm:w-[380px] lg:w-[504.1px]">
               {/* greeting */}
               {user ? (
-                <span className="text-2xl sm:text-4xl lg:text-5xl mb-10">
+                <span className="text-2xl sm:text-4xl lg:text-5xl mb-5">
                   <p className="font-eina font-bold">Hello, {name}</p>
                 </span>
               ) : null}
@@ -78,7 +78,7 @@ const Home = () => {
           </div>
         </div>
         <div className="w-full">
-          <h1 className="font-eina font-bold text-2xl sm:text-4xl lg:text-5xl mt-24 mb-4">
+          <h1 className="font-eina font-bold text-2xl sm:text-4xl lg:text-5xl mt-10 mb-4">
             Map
           </h1>
           <MapComponent />

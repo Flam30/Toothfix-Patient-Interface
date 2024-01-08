@@ -41,7 +41,7 @@ export default function Profile() {
   return (
     <main className="flex min-h-screen flex-col items-center">
       <Navbar />
-      <div className="flex flex-col z-10 w-full min-h-screen items-center p-3 sm:p-15 lg:p-28">
+      <div className="flex flex-col z-10 w-full min-h-screen items-center p-3 sm:p-10 lg:p-28">
         <Details />
         <Bookings />
       </div>
