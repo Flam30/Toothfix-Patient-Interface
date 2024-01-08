@@ -157,7 +157,9 @@ export default function Booking() {
         )
         .then((res) => {
           console.log(res.data);
-          setAppointments2d(sliceAppointments(generateAppointments(res.data, weekNumber)));
+          setAppointments2d(
+            sliceAppointments(generateAppointments(res.data, weekNumber))
+          );
         })
         .catch((err) => {
           setAppointments2d([]);
@@ -239,7 +241,6 @@ export default function Booking() {
     intervalId,
   ]);
 
-
   // show the confirmation modal
   function confirmBooking(slotId: string, date: string) {
     setShowConfirm(true);
@@ -301,44 +302,63 @@ export default function Booking() {
     <div>
       <Navbar />
       {/* display the current clinic and the dentist */}
-      <h1 className="text-3xl text-center">Book an appointment</h1>
-      <h2 className="text-xl text-center">Clinic: {selectedClinic.name}</h2>
-      <h2 className="text-xl text-center">Dentist: {selectedDentist.name}</h2>
-
-      {/* reselect a clinic button */}
-      <Link href="/clinicselect">
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-          Reselect clinic
-        </button>
-      </Link>
-
+      <div className="flex flex-row flex-nowrap items-center justify-between px-2 mb-4 w-full h-[47px] bg-[#d4ecf7] font-eina font-semibold">
+        <div className="flex flex-row">
+          <div className="flex flex-col sm:flex-row text:lg sm:text-xl text-center">
+            <span className="mr-2">{"Clinic:"}</span>
+            <span className="font-bold">{selectedClinic.name}</span>
+          </div>
+          <div className="flex flex-col sm:flex-row text:lg sm:text-xl text-center ml-3">
+            <span className="mr-2">{"Dentist:"}</span>
+            <span className="font-bold">{selectedDentist.name}</span>
+          </div>
+        </div>
+        <div>
+          {/* reselect a clinic button */}
+          <Link href="/clinicselect">
+            <button>
+              <span className="text:lg sm:text-xl underline underline-offset-1 decoration-1">
+                reselect
+              </span>
+            </button>
+          </Link>
+        </div>
+      </div>
       {/* week panel */}
-      <div className="flex justify-center">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-          onClick={scrollWeekBackward}
-          disabled={selectedWeek <= currentWeek}
-        >
-          Previous week
-        </button>
-        <h2 className="text-xl text-center">Week {selectedWeek}</h2>
-        {/* current week */}
-        <h2 className="text-xl text-center">(Current week: {currentWeek})</h2>
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
-          onClick={scrollWeekForward}
-          disabled={selectedWeek >= MAX_WEEKS}
-        >
-          Next week
-        </button>
+      <div className="flex flex-row justify-center align-center">
+        <div>
+          <button
+            className="bg-primary hover:bg-blue-700 text-white font-semibold py-2 px-2 rounded disabled:opacity-50 disabled:hover:bg-primary"
+            onClick={scrollWeekBackward}
+            disabled={selectedWeek <= currentWeek}
+          >
+            previous
+          </button>
+        </div>
+        <div className="mx-6">
+          <h2 className="text-xl text-center font-eina font-bold">
+            Week {selectedWeek}
+          </h2>
+          {/* current week */}
+          <h2 className="text-lg text-center font-semibold">
+            (current: {currentWeek})
+          </h2>
+        </div>
+        <div>
+          <button
+            className="bg-primary hover:bg-blue-700 text-white font-semibold py-2 px-2 rounded disabled:opacity-50"
+            onClick={scrollWeekForward}
+            disabled={selectedWeek >= MAX_WEEKS}
+          >
+            next
+          </button>
+        </div>
       </div>
 
       {/* confirm modal */}
-      {showConfirm ? 
+      {showConfirm ? (
         <div>
-          <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
-          >
+          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none">
             <div className="relative w-auto my-6 mx-auto max-w-3xl">
               {/*content*/}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
@@ -351,16 +371,15 @@ export default function Booking() {
                     className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
                     onClick={() => setShowConfirm(false)}
                   >
-                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
-                      
-                    </span>
+                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none"></span>
                   </button>
                 </div>
                 {/*body*/}
                 <div className="relative p-6 flex-auto">
                   <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
-                    Are you sure you want to book an appointment with {selectedDentist.name} at {selectedClinic.name}?
-                    Appointment time: {moment(selectedDate).format("HH:mm")}
+                    Are you sure you want to book an appointment with{" "}
+                    {selectedDentist.name} at {selectedClinic.name}? Appointment
+                    time: {moment(selectedDate).format("HH:mm")}
                   </p>
                 </div>
                 {/*footer*/}
@@ -384,32 +403,55 @@ export default function Booking() {
             </div>
           </div>
           <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-          </div>
-       : null}
+        </div>
+      ) : null}
 
-      <table className="w-full table-fixed text-sm text-center text-gray-500 dark:text-gray-400">
-        <thead className="text-gray-700 uppercase dark:text-gray-400">
+      <table className="w-full table-fixed text-sm text-center text-gray-500 dark:text-gray-400 mt-4">
+        <thead className="text-text dark:text-gray-400">
           <tr>
-            <th scope="col" className="px-6 py-3 bg-gray-50 dark:bg-gray-800">
-              Sunday
+            <th scope="col" className="sm:px-1 sm:py-1 lg:px-6 lg:py-3">
+              <span className="block sm:hidden lg:hidden">Sun</span>
+              <span className="hidden sm:block lg:hidden">SUN</span>
+              <span className="hidden lg:block">Sunday</span>
             </th>
-            <th scope="col" className="px-6 py-3 bg-gray-50 dark:bg-gray-800">
-              Monday
+            <th
+              scope="col"
+              className="sm:px-1 sm:py-1 lg:px-6 lg:py-3 bg-[#E6DFD7] dark:bg-gray-800"
+            >
+              <span className="block sm:hidden lg:hidden">Mon</span>
+              <span className="hidden sm:block lg:hidden">MON</span>
+              <span className="hidden lg:block">Monday</span>
             </th>
-            <th scope="col" className="px-6 py-3">
-              Tuesday
+            <th scope="col" className="sm:px-2 sm:py-1 lg:px-6 lg:py-3">
+              <span className="block sm:hidden lg:hidden">Tue</span>
+              <span className="hidden sm:block lg:hidden">TUE</span>
+              <span className="hidden lg:block">Tuesday</span>
             </th>
-            <th scope="col" className="px-6 py-3 bg-gray-50 dark:bg-gray-800">
-              Wednesday
+            <th
+              scope="col"
+              className="sm:px-1 sm:py-1 lg:px-6 lg:py-3 bg-[#E6DFD7] dark:bg-gray-800"
+            >
+              <span className="block sm:hidden lg:hidden">Wed</span>
+              <span className="hidden sm:block lg:hidden">WED</span>
+              <span className="hidden lg:block">Wednesday</span>
             </th>
-            <th scope="col" className="px-6 py-3">
-              Thursday
+            <th scope="col" className="sm:px-2 sm:py-1 lg:px-6 lg:py-3">
+              <span className="block sm:hidden lg:hidden">Thu</span>
+              <span className="hidden sm:block lg:hidden">THU</span>
+              <span className="hidden lg:block">Thursday</span>
             </th>
-            <th scope="col" className="px-6 py-3 bg-gray-50 dark:bg-gray-800">
-              Friday
+            <th
+              scope="col"
+              className="sm:px-1 sm:py-1 lg:px-6 lg:py-3 bg-[#E6DFD7] dark:bg-gray-800"
+            >
+              <span className="block sm:hidden lg:hidden">Fri</span>
+              <span className="hidden sm:block lg:hidden">FRI</span>
+              <span className="hidden lg:block">Friday</span>
             </th>
-            <th scope="col" className="px-6 py-3">
-              Saturday
+            <th scope="col" className="sm:px-1 sm:py-1 lg:px-6 lg:py-3">
+              <span className="block sm:hidden lg:hidden">Sat</span>
+              <span className="hidden sm:block lg:hidden">SAT</span>
+              <span className="hidden lg:block">Saturday</span>
             </th>
           </tr>
           {/* make a button for each appointment */}
@@ -418,16 +460,15 @@ export default function Booking() {
           {appointments2d.map((hour, index) => (
             <tr key={index}>
               {hour.map((appointment) => (
-                <td key={appointment._id} className="px-6 py-3">
+                <td key={appointment._id} className="p-[2px] sm:p-1">
                   <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+                    className="bg-accent hover:bg-primary text-text font-eina font-bold w-full py-1 px-1 sm:py-2 sm:px-4 disabled:bg-[#d4ecf7]"
                     onClick={() => {
-                      if (appointment._id !== "0" || appointment.available)
-                      {
+                      if (appointment._id !== "0" || appointment.available) {
                         confirmBooking(appointment._id, appointment.date);
                       }
                     }}
-                    disabled={appointment._id === "0"}
+                    disabled={appointment._id === "0" || !appointment.available}
                   >
                     {moment(appointment.date).format("HH:mm")}
                   </button>
@@ -435,31 +476,34 @@ export default function Booking() {
               ))}
             </tr>
           ))}
-
         </thead>
       </table>
-        {/* loading banner */}
-        { showLoading ?
-          <div className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative" role="alert">
-            <strong className="font-bold">Processing!</strong>
-            <span className="block sm:inline">  Please wait a moment</span>
-          </div>
-          : null
-        }
-        {/* success banner */}
-        { showSuccess ? 
-          <div className="bg-red-100 border border-light-green-400 text-light-green-700 px-4 py-3 rounded relative" role="alert">
-            <strong className="font-bold">Success!</strong>
-            <span className="block sm:inline">  A booking request was sent</span>  
-            {/* a button to close the banner */}
-            <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
-              <p onClick={() => setShowSuccess(false)} className="cursor-pointer">
-                close
-              </p>
-            </span>
-          </div>
-          : null
-        }
+      {/* loading banner */}
+      {showLoading ? (
+        <div
+          className="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative"
+          role="alert"
+        >
+          <strong className="font-bold">Processing!</strong>
+          <span className="block sm:inline"> Please wait a moment</span>
+        </div>
+      ) : null}
+      {/* success banner */}
+      {showSuccess ? (
+        <div
+          className="bg-red-100 border border-light-green-400 text-light-green-700 px-4 py-3 rounded relative"
+          role="alert"
+        >
+          <strong className="font-bold">Success!</strong>
+          <span className="block sm:inline"> A booking request was sent</span>
+          {/* a button to close the banner */}
+          <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
+            <p onClick={() => setShowSuccess(false)} className="cursor-pointer">
+              close
+            </p>
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 }

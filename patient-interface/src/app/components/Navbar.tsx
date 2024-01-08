@@ -27,7 +27,7 @@ const Navbar: React.FC = () => {
       </div>
       <ul className="flex items-center space-x-4 sm:space-x-9 cursor-auto mr-0 sm:mr-5 font-bebas text-3xl sm:text-[2.9rem] text-text">
         <li className=" hover:text-primary">
-          <Link href="/booking">Book</Link>
+          <Link href="/clinicselect">Book</Link>
         </li>
         <li className=" hover:text-primary">
           <Link href="/profile">My pages</Link>
