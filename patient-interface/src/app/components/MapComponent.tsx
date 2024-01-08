@@ -1,58 +1,50 @@
-import React, { useRef, useEffect } from 'react'
-import { Wrapper, Status } from "@googlemaps/react-wrapper";
-
-// Default center of the map
-const mapCenter: google.maps.LatLngLiteral = { lat: 57.70921358199699, lng: 11.973907847754571 }
-
-// Array of markers that are displayed on the map
-const markersArray: ReadonlyArray<google.maps.LatLngLiteral> = [
-  {lat: 57.70981182062649, lng: 11.939436298143544},
-  {lat: 57.70061334271214, lng: 11.954265175470795}
-]
-
-const render = (status: Status): any => {
-    if (status === Status.LOADING) return <h3>{status}...</h3>;
-    if (status === Status.FAILURE) return <h3>{status}</h3>;
-    return null;
-  };
-
-export const addMarkers = ({
-    markers,
-    map,
-  }: {
-    markers: ReadonlyArray<google.maps.LatLngLiteral>;
-    map: google.maps.Map | null | undefined;
-  }) =>
-    markers.map(
-      position =>
-        new google.maps.Marker({
-          position,
-          map,
-        }),
-    );
-
-export function Map({
-    zoom
-  }: {
-    zoom: number;
-  }) {
-    const ref:any = useRef();
-  
-    useEffect(() => {
-      const map = new window.google.maps.Map(ref.current, {
-        center: mapCenter,
-        zoom,
-      });
-      addMarkers({ markers: markersArray, map });
-    });
-  
-    return <div ref={ref} id="map" className= "w-full h-[280px] sm:h-[450px] md:h-[550px]"/>;
-  }
+import { APIProvider, Map } from "@vis.gl/react-google-maps";
+import React, { useEffect, useState } from "react";
+import { ClinicMarker, ClinicMarkerProps } from "./ClinicMarker";
+import axios from "axios";
 
 export function MapComponent() {
-    return (
-      <Wrapper apiKey="AIzaSyAFkQtGnPJcOIjEQHqH52LrCPB1uSDP1uk" render={render}>
-        <Map zoom={12} />
-      </Wrapper>
-    );
+  const API_URL = "http://localhost:3005";
+  const mapCenter = { lat: 57.70921358199699, lng: 11.973907847754571 };
+  const [markers, setMarkers] = useState<ReadonlyArray<ClinicMarkerProps>>([]);
+
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/booking/clinics/`)
+      .then((res) => {
+        // for each object in res.data, create a marker
+        let newMarkers: ClinicMarkerProps[] = [];
+        res.data.forEach((clinic: any) => {
+          newMarkers.push({
+            position: { lat: clinic.lat, lng: clinic.lng },
+            name: clinic.name,
+            address: clinic.address,
+            hours: clinic.hours,
+          });
+          setMarkers(newMarkers);
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  return (
+    <div className="w-full h-[280px] sm:h-[450px] md:h-[550px]">
+      <APIProvider apiKey={"AIzaSyAFkQtGnPJcOIjEQHqH52LrCPB1uSDP1uk"}>
+        <Map center={mapCenter} zoom={12} mapId={"clinicMap"}>
+          {markers.map((marker: ClinicMarkerProps, i) => (
+            <ClinicMarker
+              position={marker.position}
+              name={marker.name}
+              address={marker.address}
+              hours={marker.hours}
+              key={i}
+            />
+          ))}
+        </Map>
+      </APIProvider>
+    </div>
+  );
 }
+export default MapComponent;
