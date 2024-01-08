@@ -55,7 +55,7 @@ const Home = () => {
                 <p className="font-eina font-bold">Schedule with ease,<br></br>smile with confidence</p>
               </span>
               <p className="font-eina font-bold text-xl sm:text-3xl lg:text-4xl mt-5">book {' '} 
-                <Link className="group text-[#61B7DB] transition-all duration-300 ease-in-out" href="/booking">
+                <Link className="group text-[#61B7DB] transition-all duration-300 ease-in-out" href="/clinicselect">
                   <span className="bg-left-bottom bg-gradient-to-r from-[#004D70] to-[#004D70] bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
                     now
                   </span>
