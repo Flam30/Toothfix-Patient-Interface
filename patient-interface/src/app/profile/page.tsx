@@ -40,14 +40,14 @@ export default function Profile() {
   return (
     <main className="flex min-h-screen flex-col items-center">
       <Navbar />
-      <div className="flex flex-col z-10 w-full min-h-screen items-center p-10 sm:p-15 lg:p-28">
+      <div className="flex flex-col z-10 w-full min-h-screen items-center p-3 sm:p-15 lg:p-28">
         <Details />
         <div className="flex flex-col w-full mt-8">
           <h1 className="font-eina font-bold mb-5 text-3xl sm:text-4xl lg:text-5xl">
             Bookings
           </h1>
           <div className="flex flex-row flex-nowrap items-center justify-between px-1 w-full h-[47px] bg-[#d4ecf7] font-eina font-semibold text:xl lg:text-2xl">
-            <div className="flex flex-row flex-nowrap shrink-0">
+            {/* <div className="flex flex-row flex-nowrap shrink-0">
               {"11:30 - 12:00"}
               <span className="mx-1 lg:mx-2 opacity-80">on</span>
               {"12/12/2023"}
@@ -74,7 +74,7 @@ export default function Profile() {
                   cancel?
                 </span>
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

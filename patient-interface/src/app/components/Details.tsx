@@ -49,35 +49,35 @@ const Details: React.FC = () => {
           </button>
         </div>
       </div>
-      <div className="flex flex-row justify-between items-baseline w-full p-0">
-        <p className="font-eina font-semibold text-2xl sm:text-3xl lg:text-4xl">
+      <div className="flex flex-row flex-nowrap justify-between items-baseline w-full p-0">
+        <p className="font-eina font-semibold text-xl sm:text-3xl lg:text-4xl truncate text-ellipsis">
           {name}
         </p>
-        <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl">
+        <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl underline underline-offset-2 decoration-1 lg:no-underline">
           name
         </p>
       </div>
-      <div className="flex flex-row justify-between items-baseline w-full p-0">
-        <p className="font-eina font-semibold text-2xl sm:text-3xl lg:text-4xl">
+      <div className="flex flex-row flex-nowrap justify-between items-baseline w-full p-0">
+        <p className="font-eina font-semibold text-xl sm:text-3xl lg:text-4xl truncate text-ellipsis">
           {user?.email}
         </p>
         <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl">
           email
         </p>
       </div>
-      <div className="flex flex-row justify-between items-baseline w-full p-0">
-        <p className="font-eina font-semibold text-2xl sm:text-3xl lg:text-4xl">
+      <div className="flex flex-row flex-nowrap justify-between items-baseline w-full p-0">
+        <p className="font-eina font-semibold text-xl sm:text-3xl lg:text-4xl truncate text-ellipsis">
           +079 123 45 67
         </p>
-        <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl">
+        <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl underline underline-offset-2 decoration-1 lg:no-underline">
           phone number
         </p>
       </div>
-      <div className="flex flex-row justify-between items-baseline w-full p-0">
-        <p className="font-eina font-semibold text-2xl sm:text-3xl lg:text-4xl">
+      <div className="flex flex-row flex-nowrap justify-between items-baseline w-full p-0">
+        <p className="font-eina font-semibold text-xl sm:text-3xl lg:text-4xl truncate text-ellipsis">
           YYYY-MM-DD
         </p>
-        <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl">
+        <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl underline underline-offset-2 decoration-1 lg:no-underline">
           personnumer
         </p>
       </div>
