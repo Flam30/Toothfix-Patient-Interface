@@ -46,8 +46,8 @@ export default function Profile() {
           <h1 className="font-eina font-bold mb-5 text-3xl sm:text-4xl lg:text-5xl">
             Bookings
           </h1>
-          <div className="flex flex-row flex-nowrap items-center justify-between px-1 w-full h-[47px] bg-[#d4ecf7] font-eina font-semibold text:xl lg:text-2xl">
-            {/* <div className="flex flex-row flex-nowrap shrink-0">
+          <div className="hidden sm:flex flex-row flex-nowrap items-center justify-between px-1 w-full h-[47px] bg-[#d4ecf7] font-eina font-semibold text:xl lg:text-2xl">
+            <div className="flex flex-row flex-nowrap shrink-0">
               {"11:30 - 12:00"}
               <span className="mx-1 lg:mx-2 opacity-80">on</span>
               {"12/12/2023"}
@@ -74,7 +74,38 @@ export default function Profile() {
                   cancel?
                 </span>
               </button>
-            </div> */}
+            </div>
+          </div>
+          <div className="sm:hidden flex flex-col items-start px-1 w-full bg-[#d4ecf7] font-eina font-semibold">
+            <div className="flex flex-row flex-nowrap">
+              {"11:30 - 12:00"}
+              <span className="mx-1 opacity-80">on</span>
+              {"12/12/2023"}
+            </div>
+            <div className="flex flex-row flex-nowrap">
+              <span className="mr-1 opacity-80">at</span>
+              <p className="truncate text-ellipsis max-w-[350px]">
+                {"Summerbloom Dental Office"}
+              </p>
+            </div>
+            <div className="flex flex-row flex-nowrap justify-between w-full">
+              <div className="flex flex-row flex-nowrap">
+                <span className="mr-1 opacity-80">w/</span>
+                <p className="truncate text-ellipsis max-w-[250px]">
+                  {"J. Smithsoniannnnnnnnnnnnnnnn"}
+                </p>
+              </div>
+              <div>
+                <button
+                  className="group transition-all duration-300 ease-in-out"
+                  onClick={logout}
+                >
+                  <span className="underline underline-offset-1 decoration-1">
+                    cancel?
+                  </span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

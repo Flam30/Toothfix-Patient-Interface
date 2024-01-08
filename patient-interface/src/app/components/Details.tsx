@@ -41,7 +41,6 @@ const Details: React.FC = () => {
           <button
             className="group font-eina font-bold text-primary opacity-90 text-xl sm:text-xl lg:text-2xl transition-all duration-300 ease-in-out"
             onClick={logout}
-            // className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             <span className="underline underline-offset-2 decoration-darkaccent lg:no-underline bg-left-bottom bg-gradient-to-r from-darkaccent to-darkaccent bg-[length:0%_2px] bg-no-repeat group-hover:bg-[length:100%_2px] transition-all duration-500 ease-out">
               log out?
@@ -49,33 +48,33 @@ const Details: React.FC = () => {
           </button>
         </div>
       </div>
-      <div className="flex flex-row flex-nowrap justify-between items-baseline w-full p-0">
-        <p className="font-eina font-semibold text-xl sm:text-3xl lg:text-4xl truncate text-ellipsis">
+      <div className="flex flex-row flex-nowrap justify-between sm:h-[37px] lg:h-[43px] items-baseline w-full">
+        <p className="font-eina font-semibold text-xl sm:text-3xl lg:text-4xl h-full truncate text-ellipsis">
           {name}
         </p>
         <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl underline underline-offset-2 decoration-1 lg:no-underline">
           name
         </p>
       </div>
-      <div className="flex flex-row flex-nowrap justify-between items-baseline w-full p-0">
-        <p className="font-eina font-semibold text-xl sm:text-3xl lg:text-4xl truncate text-ellipsis">
+      <div className="flex flex-row flex-nowrap justify-between sm:h-[37px] lg:h-[43px] items-baseline w-full p-0">
+        <p className="font-eina font-semibold text-xl sm:text-3xl lg:text-4xl h-full truncate text-ellipsis">
           {user?.email}
         </p>
         <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl">
           email
         </p>
       </div>
-      <div className="flex flex-row flex-nowrap justify-between items-baseline w-full p-0">
-        <p className="font-eina font-semibold text-xl sm:text-3xl lg:text-4xl truncate text-ellipsis">
+      <div className="flex flex-row flex-nowrap justify-between sm:h-[37px] lg:h-[43px] items-baseline w-full p-0">
+        <p className="font-eina font-semibold text-xl sm:text-3xl lg:text-4xl h-full truncate text-ellipsis">
           +079 123 45 67
         </p>
         <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl underline underline-offset-2 decoration-1 lg:no-underline">
           phone number
         </p>
       </div>
-      <div className="flex flex-row flex-nowrap justify-between items-baseline w-full p-0">
-        <p className="font-eina font-semibold text-xl sm:text-3xl lg:text-4xl truncate text-ellipsis">
-          YYYY-MM-DD
+      <div className="flex flex-row flex-nowrap justify-between sm:h-[37px] lg:h-[43px] items-baseline w-full p-0">
+        <p className="font-eina font-semibold text-xl sm:text-3xl lg:text-4xl h-full truncate text-ellipsis">
+          YYYYMMDD-XXXX
         </p>
         <p className="font-eina font-semibold opacity-90 text-xl sm:text-xl lg:text-2xl underline underline-offset-2 decoration-1 lg:no-underline">
           personnumer
