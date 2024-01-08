@@ -1,6 +1,9 @@
-'use client';
+"use client";
 
 import React, { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
+import Details from "../components/Details";
+import Bookings from "../components/Bookings";
 
 // FIREBASE
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -12,11 +15,8 @@ import { redirect } from "next/navigation";
 import { useRouter } from "next/router";
 
 export default function Profile() {
-
   const [user, loading, error] = useAuthState(auth);
   const [name, setName] = useState("");
-
-  
 
   useEffect(() => {
     const fetchUserName = async () => {
@@ -31,26 +31,20 @@ export default function Profile() {
       }
     };
 
-    if(loading) return;
-    if(!user) { 
-      redirect('/login');
-      return;
+    if (loading) return;
+    if (!user) {
+      redirect("/login");
     }
     fetchUserName();
   }, [user, loading]);
 
   return (
-    <div>
-       <div>
-        Logged in as
-         <div>{name}</div>
-         <div>{user?.email}</div>
-         <button onClick={logout}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-         >
-          Logout
-         </button>
-       </div>
-     </div>
-  )
+    <main className="flex min-h-screen flex-col items-center">
+      <Navbar />
+      <div className="flex flex-col z-10 w-full min-h-screen items-center p-3 sm:p-10 lg:p-28">
+        <Details />
+        <Bookings />
+      </div>
+    </main>
+  );
 }
