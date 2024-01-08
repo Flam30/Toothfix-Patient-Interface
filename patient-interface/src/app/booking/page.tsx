@@ -1,13 +1,15 @@
 "use client";
 
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import Navbar from ".././components/Navbar";
+import Image from "next/image";
 
 // TIME
 import moment from "moment";
 const MAX_WEEKS = 52;
 const DAY_START = 9;
 const DAY_END = 17;
+const REFETCH_INTERVAL_MS = 10000;
 
 // selected clinic and dentist
 
@@ -29,13 +31,18 @@ export default function Booking() {
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
 
-  // BANNERS
+  // BANNERS AND MODALS
   const [showSuccess, setShowSuccess] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   // time things
   const [currentWeek, setCurrentWeek] = useState<number>(moment().week());
   const [selectedWeek, setSelectedWeek] = useState<number>(moment().week());
+
+  // data for confirmation
+  const [selectedSlot, setSelectedSlot] = useState<any>();
+  const [selectedDate, setSelectedDate] = useState<any>();
 
   // appointment slots
   const [appointments, setAppointments] = useState<any[]>();
@@ -51,6 +58,9 @@ export default function Booking() {
 
   const [selectedClinic, setSelectedClinic] = useState<any>({});
   const [selectedDentist, setSelectedDentist] = useState<any>({});
+
+  // LOOP THING
+  const [intervalId, setIntervalId] = useState<any>(null);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -138,7 +148,7 @@ export default function Booking() {
   // fetch the appointments from the API gateway
   const fetchAppointments = useCallback(
     (weekNumber: number) => {
-      // clean the appointments
+      let appointmentsArray2d: any[][] = [];
       setAppointments2d([]);
       // fetch the appointments
       axios
@@ -150,6 +160,7 @@ export default function Booking() {
           setAppointments2d(sliceAppointments(generateAppointments(res.data, weekNumber)));
         })
         .catch((err) => {
+          setAppointments2d([]);
           console.log(err);
         });
     },
@@ -158,6 +169,16 @@ export default function Booking() {
 
   // USE EFFECT HOOK
   useEffect(() => {
+    // start the interval
+    const startInterval = async () => {
+      if (!intervalId) {
+        const newIntervalId = setInterval(() => {
+          fetchAppointments(selectedWeek);
+        }, REFETCH_INTERVAL_MS); // Call the fetchAppointments function every x seconds
+        setIntervalId(newIntervalId);
+      }
+    };
+
     function getSearchParams() {
       const clinic = searchParams.get("clinic");
       const dentist = searchParams.get("dentist");
@@ -198,7 +219,7 @@ export default function Booking() {
       !(selectedClinic._id === undefined || selectedDentist._id === undefined)
     ) {
       fetchAppointments(selectedWeek);
-
+      startInterval();
       setIsFetched(true);
     }
   }, [
@@ -215,27 +236,43 @@ export default function Booking() {
     selectedDentist,
     isFetched,
     appointments2d,
+    intervalId,
   ]);
 
+
+  // show the confirmation modal
+  function confirmBooking(slotId: string, date: string) {
+    setShowConfirm(true);
+    setSelectedSlot(slotId);
+    setSelectedDate(date);
+  }
+
   // send the booking info
-  async function sendBooking(slotId: string, date: string) {
+  async function sendBooking() {
+    setShowLoading(true);
+    setShowConfirm(false);
+
     // send to the API gateway
     await axios
       .post(`${API_URL}/booking/bookings`, {
-        date: date,
-        start: "deprecated",
-        end: "deprecated",
-        patient: user?.uid,
+        date: selectedDate,
+        patientId: user?.uid,
+        patientName: user?.displayName,
         patientEmail: user?.email,
         dentist: selectedDentist,
-        slotId: slotId,
+        slotId: selectedSlot,
       })
       .then(() => {
+        // refetch the appointments
+        fetchAppointments(selectedWeek);
         setShowLoading(false);
         setShowSuccess(true);
+        setShowConfirm(false);
       })
       .catch((err) => {
         setShowLoading(false);
+        setShowSuccess(false);
+        setShowConfirm(false);
         console.log(err);
       });
   }
@@ -296,6 +333,60 @@ export default function Booking() {
         </button>
       </div>
 
+      {/* confirm modal */}
+      {showConfirm ? 
+        <div>
+          <div
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+          >
+            <div className="relative w-auto my-6 mx-auto max-w-3xl">
+              {/*content*/}
+              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
+                {/*header*/}
+                <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
+                  <h3 className="text-3xl font-semibold">
+                    Confirm your booking
+                  </h3>
+                  <button
+                    className="p-1 ml-auto bg-transparent border-0 text-black opacity-5 float-right text-3xl leading-none font-semibold outline-none focus:outline-none"
+                    onClick={() => setShowConfirm(false)}
+                  >
+                    <span className="bg-transparent text-black opacity-5 h-6 w-6 text-2xl block outline-none focus:outline-none">
+                      
+                    </span>
+                  </button>
+                </div>
+                {/*body*/}
+                <div className="relative p-6 flex-auto">
+                  <p className="my-4 text-blueGray-500 text-lg leading-relaxed">
+                    Are you sure you want to book an appointment with {selectedDentist.name} at {selectedClinic.name}?
+                    Appointment time: {moment(selectedDate).format("HH:mm")}
+                  </p>
+                </div>
+                {/*footer*/}
+                <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
+                  <button
+                    className="text-red-500 background-transparent font-bold uppercase px-6 py-2 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+                    type="button"
+                    onClick={() => setShowConfirm(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="bg-green-800 text-white font-bold uppercase text-sm px-6 py-3 rounded shadow outline-none"
+                    type="button"
+                    onClick={() => sendBooking()}
+                  >
+                    Book
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
+          </div>
+       : null}
+
       <table className="w-full table-fixed text-sm text-center text-gray-500 dark:text-gray-400">
         <thead className="text-gray-700 uppercase dark:text-gray-400">
           <tr>
@@ -331,10 +422,9 @@ export default function Booking() {
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
                     onClick={() => {
-                      if (appointment._id !== "0")
+                      if (appointment._id !== "0" || appointment.available)
                       {
-                        setShowLoading(true);
-                        sendBooking(appointment._id, appointment.date);
+                        confirmBooking(appointment._id, appointment.date);
                       }
                     }}
                     disabled={appointment._id === "0"}
@@ -361,6 +451,12 @@ export default function Booking() {
           <div className="bg-red-100 border border-light-green-400 text-light-green-700 px-4 py-3 rounded relative" role="alert">
             <strong className="font-bold">Success!</strong>
             <span className="block sm:inline">  A booking request was sent</span>  
+            {/* a button to close the banner */}
+            <span className="absolute top-0 bottom-0 right-0 px-4 py-3">
+              <p onClick={() => setShowSuccess(false)} className="cursor-pointer">
+                close
+              </p>
+            </span>
           </div>
           : null
         }
