@@ -260,7 +260,8 @@ export default function Booking() {
         patientId: user?.uid,
         patientName: user?.displayName,
         patientEmail: user?.email,
-        dentist: selectedDentist,
+        dentist: selectedDentist.personnummer,
+        dentistName: selectedDentist.name,
         slotId: selectedSlot,
       })
       .then(() => {
