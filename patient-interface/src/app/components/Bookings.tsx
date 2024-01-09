@@ -60,7 +60,7 @@ const Bookings: React.FC = () => {
           </button>
         </div>
       </div>
-      <div className="sm:hidden flex flex-col items-start px-1 w-full bg-[#d4ecf7] font-eina font-semibold">
+      <div className="sm:hidden flex flex-col items-start px-1 w-full bg-[#d4ecf7] dark:bg-darkaccent font-eina font-semibold">
         <div className="flex flex-row flex-nowrap">
           {"11:30 - 12:00"}
           <span className="mx-1 opacity-80">on</span>
