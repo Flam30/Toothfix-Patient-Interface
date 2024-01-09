@@ -33,7 +33,7 @@ const Bookings: React.FC = () => {
   return (
     <div className="flex flex-col w-full mt-8">
       <h1 className="font-eina font-bold mb-5 text-3xl sm:text-4xl lg:text-5xl">
-        Bookings
+        Appointments
       </h1>
       <div className="hidden sm:flex flex-row flex-nowrap items-center justify-between px-2 w-full h-[47px] bg-[#d4ecf7] font-eina font-semibold text:xl lg:text-2xl">
         <div className="flex flex-row flex-nowrap shrink-0">
