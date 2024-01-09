@@ -89,7 +89,7 @@ const Bookings: React.FC = () => {
   return (
     <div className="flex flex-col w-full mt-8">
       <h1 className="font-eina font-bold mb-5 text-3xl sm:text-4xl lg:text-5xl">
-        Bookings
+        Appointments
       </h1>
 
       {/* input modal NAME */}

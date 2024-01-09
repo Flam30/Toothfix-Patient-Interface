@@ -51,24 +51,9 @@ const Faq: React.FC = () => {
             How do I book an appointment?
           </AccordionHeader>
           <AccordionBody className="font-eina font-semibold text-base sm:text-lg lg:text-xl">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry&apos;s standard dummy
-            text ever since the 1500s, when an unknown printer took a galley of
-            type and scrambled it to make a type specimen book.
-          </AccordionBody>
-        </Accordion>
-        <Accordion open={openAcc2} icon={<Icon id={2} open={openAcc2} />}>
-          <AccordionHeader
-            className="font-eina font-semibold text-xl sm:text-2xl lg:text-3xl"
-            onClick={handleOpenAcc2}
-          >
-            How do I cancel an appointment?
-          </AccordionHeader>
-          <AccordionBody className="font-eina font-semibold text-base sm:text-lg lg:text-xl">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry&apos;s standard dummy
-            text ever since the 1500s, when an unknown printer took a galley of
-            type and scrambled it to make a type specimen book.
+            First, you need to navigate to the booking page by pressing BOOK.
+            You will then be prompted to select a clinic and a dentist.
+            Afterwards, you will be able to select a any available appointment.
           </AccordionBody>
         </Accordion>
         <Accordion open={openAcc3} icon={<Icon id={3} open={openAcc3} />}>
@@ -79,10 +64,23 @@ const Faq: React.FC = () => {
             Where can I see my appointments?
           </AccordionHeader>
           <AccordionBody className="font-eina font-semibold text-base sm:text-lg lg:text-xl">
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry&apos;s standard dummy
-            text ever since the 1500s, when an unknown printer took a galley of
-            type and scrambled it to make a type specimen book.
+            You can find booked appointments on MY PAGES.
+          </AccordionBody>
+        </Accordion>
+        <Accordion open={openAcc2} icon={<Icon id={2} open={openAcc2} />}>
+          <AccordionHeader
+            className="font-eina font-semibold text-xl sm:text-2xl lg:text-3xl"
+            onClick={handleOpenAcc2}
+          >
+            How do I cancel an appointment?
+          </AccordionHeader>
+          <AccordionBody className="font-eina font-semibold text-base sm:text-lg lg:text-xl">
+            After navigating to MY PAGES and logging in, you can cancel any
+            appointment by pressing{" "}
+            <span className="underline underline-offset-1 decoration-1">
+              cancel
+            </span>
+            {"."}
           </AccordionBody>
         </Accordion>
       </div>
